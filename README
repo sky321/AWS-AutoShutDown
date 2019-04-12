@@ -1,0 +1,37 @@
+Wolkenobergrenze
+Automatischer Kostendeckel für Amazons Cloud-Server
+
+c't 12/2018, S. 168
+-----------------------------------------------------------
+ec2stoptagged.py     Kostendeckel (Python-2.7-Funktion für Amazon Lambda)
+lambda-role          Role der Lambda-Funktion
+topic-policy         Topic-Policy für Alarm-SNS
+
+-----------------------------------------------------------
+Update Christian Schwabe 31.5.2018
+
+The original Script use AWS Budgets to trigger events to stop tagged instances in all AWS regions.
+Update of this Version to have a PoC for just the function with trigger through SNS.
+No trigger with budget control!
+Only for instances in Ireland region!
+
+You need: 
+- Tagged and unTagged EC2 Instances
+- Lambda function (python script)
+- Lambda role 
+- Lambda TestEvent (just to test the lambda function)
+- SNS Topic (Topic Name = Tag for the Instance)
+
+How it works:
+- Build and tag your instances
+- Create Lambda function (python 2.7), create CustomRole, copy py script
+- To test the Lambda function, test with TestEvent (comment return for every trigger in py script - row 22)
+- Create topic for SNS with the name of the tagged instance to stop
+- Create subscription for this topic, use AWS Lambda as protocol and the ARN from your Lambda function
+- TEST!!!!
+- Publish a message via SNS dashboard, use the ARN from your topic, as subject use "AutoShutDownTrigger", no matter what message
+! If you change the subject of the message -> nothing will be stoped
+! If your SNS topic name is not equal to the instance tag -> nothing will be stoped
+! So it is possible to have one SNS topic for each tag you like to trigger
+
+
